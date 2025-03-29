@@ -1,0 +1,60 @@
+﻿.btn-group {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Khoảng cách giữa các phần tử */
+}
+
+    .btn-group a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 25px;
+        height: 25px;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #fff;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+        .btn-group a:hover {
+            transform: scale(1.1);
+        }
+
+    .btn-group .edit {
+        background-color: #007bff; /* Màu xanh cho nút sửa */
+    }
+
+    .btn-group .reset {
+        background-color: #6c757d; /* Màu xám cho nút reset */
+    }
+
+    .btn-group .confirm {
+        background-color: #1bdc2a; /* Màu vàng cho nút duyệt */
+    }
+    .btn-group .details {
+        background-color: #e2b01b; /* Màu cam cho nút cấu hình */
+    }
+    .btn-group .fa-trash-alt {
+        background-color: #dc3545; /* Màu đỏ cho nút xóa */
+    }
+
+    .btn-group i {
+        font-size: 16px;
+    }
+.pagination .active a {
+    z-index: 3;
+    color: #fff;
+    background-color: #0af;
+    border-color: #0af;
+}
+
+.pagination li a {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #0af;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}

@@ -1,0 +1,53 @@
+﻿@model IntershipManagement.Areas.Admin.Data.ReportTemplateViewModel
+<div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel">Kết quả báo cáo</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close">
+    </button>
+</div>
+<div class="card-body">
+    <dl class="row">
+        <dt class="col-sm-3">Tiêu đề:</dt>
+        <dd class="col-sm-9">@Model.Template.Title</dd>
+
+        <dt class="col-sm-3">Ngày nộp:</dt>
+        <dd class="col-sm-9">@Model.Report.SubmissionDate</dd>
+
+        <dt class="col-sm-3">Trạng thái:</dt>
+        <dd class="col-sm-9">@Model.Report.Status</dd>
+
+        <dt class="col-sm-3">Nhận xét của giáo viên:</dt>
+        <dd class="col-sm-9">@Model.Report.TeacherComments</dd>
+
+        <dt class="col-sm-3">Điểm:</dt>
+        <dd class="col-sm-9">@Model.Report.Grade</dd>
+
+        <dt class="col-sm-3">Tuần:</dt>
+        <dd class="col-sm-9">@Model.Report.SubmissionRound</dd>
+
+        <dt class="col-sm-3">Kết quả:</dt>
+        <dd class="col-sm-9">
+            @if (Model.Report.IsCompleted.HasValue)
+            {
+                if (Model.Report.IsCompleted.Value == 1)
+                {
+                    <span class="badge bg-success">ĐẠT</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">KHÔNG ĐẠT</span>
+                }
+            }
+            else
+            {
+                <span class="badge bg-secondary">Chưa đánh giá</span>
+            }
+        </dd>
+    </dl>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light"
+                data-bs-dismiss="modal">
+            Thoát
+        </button>
+    </div>
+</div>

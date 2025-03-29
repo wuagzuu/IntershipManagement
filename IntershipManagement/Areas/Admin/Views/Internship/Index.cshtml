@@ -1,0 +1,218 @@
+﻿@model IEnumerable<IntershipManagement.Areas.Admin.Data.InternshipViews>
+@{
+    ViewBag.Title = "Đăng ký thực tập";
+    var index = 0;
+}
+<div class="card">
+    <div class="card-header"><h3 class="card-title">Danh sách phiếu thực tập</h3></div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                @if (User.IsInRole("Giáo viên"))
+                {
+                    <form class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-2 mb-2">
+                                <input class="form-control" id="myInput1" type="text" placeholder="Tìm kiếm...">
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <div class="">
+                                    @Html.DropDownList("statuss", new List<SelectListItem>{
+                                    new SelectListItem { Value = "" , Text = "--Trạng thái--" },
+                                    new SelectListItem { Value = "1" , Text = "Chờ duyệt" }}, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="input-daterange input-group">
+                                    <input class="form-control" type="date" id="start_date" name="start_date" value="@ViewBag.start_date">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">to</span>
+                                    </div>
+                                    <input class="form-control" type="date" id="end_date" name="end_date" value="@ViewBag.end_date">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                }
+                @if (User.IsInRole("Sinh viên"))
+                {
+                    <div class="d-flex justify-content-center">
+                        <a class="btn btn-success" href="#" id="add">
+                            <i class="ti ti-plus"></i> Tạo phiếu đăng ký
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Chi tiết phiếu</h3><div id="error-message" style="display: none;"></div>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped" id="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Mã phiếu</th>
+                    <th>Thông tin ứng tuyển</th>
+                    <th>Trạng thái</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody id="myTable1">
+                @foreach (var item in Model)
+                {
+                    index++;
+                    <tr>
+                        <td style="display:none">@item.Id</td>
+                        <td>@index</td>
+                        <td>
+                            @item.Code.ToUpper()
+                        </td>
+                        <td>
+                            <p>Mã định danh: @item.StudentCode</p>
+                            <p>Họ tên: @item.StudentName</p>
+                            <p>Chuyên ngành: @item.MajorName</p>
+                            <p>Công ty: @item.EnterpriseName</p>
+                            <p>Vị trí: @item.JobName</p>
+                        </td>
+                        <td>
+                            @if (item.IsConfirm == 0)
+                            {
+                                <p class="text-warning">Chờ duyệt</p>
+                            }
+                            else
+                            {
+                                <p class="text-success">Đã duyệt</p>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                @if (User.IsInRole("Sinh viên") && item.IsConfirm == 0)
+                                {
+                                    <a class="fas fa-edit edit" href="#" title="sửa"></a>
+                                }
+                                else if (User.IsInRole("Giáo viên"))
+                                {
+                                    if (item.IsConfirm == 0)
+                                    {
+                                        <a class="fas fa-check confirm" title="duyệt phiếu" href="#"></a>
+                                    }
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="row">
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $("#myInput1").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable1 tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $("#add").click(function () {
+            $.ajax({
+                type: "GET",
+                url: "/Admin/Internship/Create",
+                success: function (response) {
+                    if (response.success === false) {
+                        alert(response.message); // Hiển thị thông báo lỗi
+                    } else {
+                        $('#createbody').html(response); // Load nội dung partial view
+                        $('#createmodal').modal('show'); // Hiển thị modal
+                    }
+                },
+                error: function () {
+                    alert("Đã xảy ra lỗi khi tải dữ liệu. Vui lòng thử lại.");
+                }
+            });
+        });
+
+        $("#table .edit").click(function () {
+            var Id = $(this).closest("tr").find("td").eq(0).html();
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Internship/Edit",
+                data: '{Id: "' + Id + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $('#createbody').html(response);
+                    $('#createmodal').modal('show');
+                }
+            });
+        });
+        $('.confirm').click(function (e) {
+            e.preventDefault();
+
+            var $button = $(this);
+            var id = $(this).closest("tr").find("td").eq(0).html();
+
+            // Hiển thị confirm dialog
+            Swal.fire({
+                title: 'Xác nhận duyệt phiếu',
+                text: "Bạn có chắc chắn muốn duyệt phiếu này không?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("Confirm", "Internship", new { area = "Admin" })',
+                        type: 'POST',
+                        data: { Id: id },
+                        beforeSend: function () {
+                            // Hiển thị loading
+                            Swal.fire({
+                                title: 'Đang xử lý...',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        },
+                        success: function (response) {
+                            // Ẩn loading
+                            Swal.close();
+
+                            // Hiển thị thông báo thành công
+                            Swal.fire({
+                                title: 'Thành công!',
+                                text: 'Phiếu đã được duyệt thành công',
+                                icon: 'success',
+                                timer: 3500
+                            }).then(() => {
+                                // Ẩn nút duyệt
+                                $button.hide();
+                                // reload trang
+                                window.location.reload();
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            // Ẩn loading và hiển thị lỗi
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: 'Có lỗi xảy ra khi duyệt phiếu. Vui lòng thử lại sau.',
+                                icon: 'error'
+                            });
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+            });
+});
+    </script>
+}

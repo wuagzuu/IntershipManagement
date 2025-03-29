@@ -1,0 +1,110 @@
+﻿@model IEnumerable<IntershipManagement.Areas.Admin.Data.JobViews>
+@{
+    ViewBag.Title = "Doanh nghiệp";
+    var index = 0;
+    var enterpriseId = ViewBag.Enterprise.Id;
+    var enterpriseName = ViewBag.Enterprise.Name;
+}
+<div class="card">
+    <div class="card-header"><h3 class="card-title text-danger">Vị trí công việc - Doanh nghiệp: @enterpriseName</h3></div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <form class="needs-validation" novalidate>
+                    <div class="col-md-2 mb-2">
+                        <input class="form-control" id="myInput1" type="text" placeholder="Tìm kiếm...">
+                    </div>
+                    @if (User.IsInRole("Admin - Quản trị toàn hệ thống"))
+                    {
+                        <a class="btn btn-success" href="#" id="add"><i class="ti ti-plus"></i> Tạo mới</a>
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Table database</h3><div id="error-message" style="display: none;"></div>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped" id="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Chuyên ngành</th>
+                    <th>Vị trí</th>
+                    <th>Số lượng ứng tuyển</th>
+                    <th>Ngày tạo</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody id="myTable1">
+                @foreach (var item in Model)
+                {
+                    index++;
+                    <tr>
+                        <td style="display:none">@item.Id</td>
+                        <td>@index</td>
+                        <td>
+                            @item.MajorName
+                        </td>
+                        <td>@item.Name</td>
+                        <td>
+                            @item.Slot
+                        </td>
+                        <td>
+                            @item.Createdate.Value.ToShortDateString()
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                @if (User.IsInRole("Admin - Quản trị toàn hệ thống"))
+                                {
+                                    <a class="fas fa-edit edit" title="sửa thông tin" href="#"></a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="row">
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $("#myInput1").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable1 tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $("#add").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/Admin/ConfigJob/Create",
+                data: {enterpriseId: @enterpriseId},
+                success: function (response) {
+                    $('#createbody').html(response);
+                    $('#createmodal').modal('show');
+                }
+            });
+        });
+        $("#table .edit").click(function () {
+            var Id = $(this).closest("tr").find("td").eq(0).html();
+            $.ajax({
+                type: "POST",
+                url: "/Admin/ConfigJob/Edit",
+                data: '{Id: "' + Id + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $('#createbody').html(response);
+                    $('#createmodal').modal('show');
+                }
+            });
+        });
+    </script>
+}

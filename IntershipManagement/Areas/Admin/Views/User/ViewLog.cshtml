@@ -1,0 +1,23 @@
+﻿@model List<IntershipManagement.Models.Edit_Log>
+@{
+    string username = ViewBag.UserName;
+}
+<div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel">Lịch sử thay đổi</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close">
+    </button>
+</div>
+<div class="card-body">
+    @foreach (var item in Model)
+    {
+        <p>@item.Createdate.Value.ToString("dd/MM/yyyy HH:mm") @item.Description</p>
+    }
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light"
+                data-bs-dismiss="modal">
+            Thoát
+        </button>
+    </div>
+</div>
+

@@ -1,0 +1,115 @@
+﻿@model IEnumerable<IntershipManagement.Areas.Admin.Data.ReportViews>
+
+@{
+    ViewBag.Title = "Danh sách báo cáo";
+}
+<div class="card">
+    <div class="card-header"><h3 class="card-title">Danh sách mẫu báo cáo</h3></div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <form class="needs-validation" novalidate>
+                    <div class="col-md-2 mb-2">
+                        <input class="form-control" id="myInput1" type="text" placeholder="Tìm kiếm...">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Table database</h3><div id="error-message" style="display: none;"></div>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped" id="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Mã sinh viên</th>
+                    <th>Báo cáo</th>
+                    <th>Ngày nộp</th>
+                    <th>Trạng thái</th>
+                    <th>Nhận xét của giáo viên</th>
+                    <th>Điểm</th>
+                    <th>Kết quả</th>
+                    <th>Tùy chọn</th>
+                </tr>
+            </thead>
+            <tbody id="myTable1">
+                @if (Model != null && Model.Any())
+                {
+                    int index = 0;
+                    foreach (var report in Model)
+                    {
+                        index++;
+                        <tr>
+                            <td style="display:none">@report.Id</td>
+                            <td>@index</td>
+                            <td>@report.StudentCode</td>
+                            <td>
+                                <p>@report.Title</p>
+                                <p>Tuần @report.SubmissionRound</p>
+                            </td>
+                            <td>@report.SubmissionDate.Value.ToShortDateString()</td>
+                            <td>@report.Status</td>
+                            <td>@report.TeacherComments</td>
+                            <td>@report.Grade</td>
+                            @if (report.IsCompleted == 1)
+                            {
+                                <td>
+                                    <span class="badge bg-success">ĐẠT</span>
+                                </td>
+                            }
+                            else if (report.IsCompleted == 0)
+                            {
+                                <td>
+                                    <span class="badge bg-danger">KHÔNG ĐẠT</span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <span class="badge bg-warning">CHỜ ĐÁNH GIÁ</span>
+                                </td>
+                            }
+                            <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-primary evaluate" data-id="@report.Id">Đánh giá</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9">Không có báo cáo nào được tìm thấy.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="row">
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(".evaluate").click(function () {
+                var Id = $(this).closest("tr").find("td").eq(0).html();
+                $.ajax({
+                    type: "GET",
+                    url: "/Admin/TeacherReports/Evaluate",
+                    data: { id: Id },
+                    success: function (response) {
+                        $('#createbody').html(response);
+                        $('#createmodal').modal('show');
+                    }
+                });
+            });
+        });
+
+    </script>
+}

@@ -1,0 +1,255 @@
+﻿@model IntershipManagement.Models.AspNetUser
+@{
+    ViewBag.Title = "Profile";
+}
+<!-- start page title -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-flex align-items-center justify-content-between">
+            <h4 class="mb-0">Tài khoản</h4>
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+<div class="row">
+    <div class="col-xxl-3 col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="profile-bg position-relative overflow-hidden rounded-top" style="height: 150px;">
+                    <div class="bg-overlay bg-dark bg-gradient"></div>
+
+                    @*<div class="position-relative p-3 text-end">
+                            <button type="button" class="btn btn-primary btn-sm"><i class="mdi mdi-pencil me-1"></i> Edit</button>
+                        </div>*@
+                </div>
+                <div class="text-center">
+                    <div class="position-relative d-inline-block mx-auto mt-n5 mb-4">
+                        <div class="avatar-lg">
+                            <img src="/assets/images/users/avatar-3.jpg" alt="" class="rounded-circle img-thumbnail">
+                        </div>
+                        @*<a href="#" class="d-block position-absolute bottom-0 end-0">
+                                <div class="avatar-sm">
+                                    <div class="avatar-title rounded-circle bg-light text-primary">
+                                        <i class="mdi mdi-pencil"></i>
+                                    </div>
+                                </div>
+                            </a>*@
+                    </div>
+
+                    <h5 class="font-size-16 mb-1">@Session["FullNameUser"]</h5>
+                    <p class="text-muted mb-0">@Session["RoleId"]</p>
+                </div>
+                <hr class="my-4">
+                <div>
+                    <h5 class="font-size-16">Thông tin</h5>
+
+                    <div class="mt-4">
+                        <p class="text-muted mb-1">Tên đăng nhập :</p>
+                        <h5 class="font-size-14 text-truncate">@User.Identity.Name</h5>
+                    </div>
+
+                    <div class="mt-4">
+                        <p class="text-muted mb-1">E-mail :</p>
+                        <h5 class="font-size-14 text-truncate">@Model.Email</h5>
+                    </div>
+
+                    <div class="mt-4">
+                        <p class="text-muted mb-1">Số điện thoại :</p>
+                        <h5 class="font-size-14 text-truncate">@Model.PhoneNumber</h5>
+                    </div>
+
+                    <div class="mt-4">
+                        <p class="text-muted mb-1">Địa chỉ :</p>
+                        <h5 class="font-size-14 text-truncate">@Session["AddressUser"]</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end card -->
+
+    </div>
+    <!-- end col -->
+
+    <div class="col-xxl-9 col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-4">Cài đặt</h5>
+                @using (Html.BeginForm("EditConfirm", "User", FormMethod.Post, new { area = "Admin", enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Id)
+                    @Html.HiddenFor(model => model.EmailConfirmed)
+                    @Html.HiddenFor(model => model.PasswordHash)
+                    @Html.HiddenFor(model => model.SecurityStamp)
+                    @Html.HiddenFor(model => model.PhoneNumberConfirmed)
+                    @Html.HiddenFor(model => model.TwoFactorEnabled)
+                    @Html.HiddenFor(model => model.LockoutEndDateUtc)
+                    @Html.HiddenFor(model => model.LockoutEnabled)
+                    @Html.HiddenFor(model => model.AccessFailedCount)
+                    @Html.HiddenFor(model => model.Createdate)
+                    @Html.HiddenFor(model => model.Createby)
+                    @Html.HiddenFor(model => model.Code)
+                    @Html.HiddenFor(model => model.MajorId)
+                    @Html.Hidden("Roler", Model.AspNetRoles.FirstOrDefault().Name)
+                    <div class="form-horizontal">
+                        <div class="card border shadow-none mb-5">
+                            <div class="card-header d-flex align-items-center">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar-sm">
+                                        <div class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                            01
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="card-title">Thông tin chung</h5>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="gen-info-name-input">Họ tên</label>
+                                            @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="gen-info-designation-input">Số điện thoại</label>
+                                            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="gen-info-designation-input">Email</label>
+                                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="gen-info-name-input">Thành phố/ Tỉnh</label>
+                                            @Html.DropDownListFor(model => model.Province, new List<SelectListItem> { new SelectListItem { Value = Model.Province, Text = Model.Province } }, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="gen-info-name-input">Quận/ Huyện</label>
+                                            @Html.DropDownListFor(model => model.District, new List<SelectListItem> { new SelectListItem { Value = Model.District, Text = Model.District } }, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="gen-info-name-input">Xã/ Phường</label>
+                                            @Html.DropDownListFor(model => model.Ward, new List<SelectListItem> { new SelectListItem { Value = Model.Ward, Text = Model.Ward } }, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="gen-info-name-input">Địa chỉ</label>
+                                            @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end card -->
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary w-sm">Lưu thay đổi</button>
+                        </div>
+                    </div>
+                }
+                <!-- end form -->
+            </div>
+            <!-- end card body -->
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="card border shadow-none mb-5">
+                    <div class="card-header d-flex align-items-center">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="avatar-sm">
+                                <div class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                    02
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="card-title">Quyền truy cập</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <span>@Session["RoleId"]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end card -->
+    </div>
+    <!-- end col -->
+</div>
+<!-- end row -->
+<script>
+    $(document).ready(function () {
+        $("#Province").click(function () {
+            $.ajax
+                ({
+                    url: '/Admin/Home/GetProvince',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        $("#District").empty();
+                        $("#Ward").empty();
+                        if ($("#Province option").length < 3) {
+                            $.each(data, function (i, province) {
+                                $("#Province").append($('<option></option>').val(province.Name).html(province.Name))
+                            })
+                        }
+                    }
+                });
+        });
+        $("#District").click(function () {
+            var name = $("#Province").val();
+            $.ajax
+                ({
+                    url: '/Admin/Home/GetDistrict',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        text: name
+                    }),
+                    success: function (data) {
+                        $("#Ward").empty();
+                        if ($("#District option").length < 3) {
+                            $.each(data, function (i, district) {
+                                $("#District").append($('<option></option>').val(district.Name).html(district.Name))
+                            })
+                        }
+                    }
+                });
+        });
+        $("#Ward").click(function () {
+            var name = $("#District").val();
+            $.ajax
+                ({
+                    url: '/Admin/Home/GetWard',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        text: name
+                    }),
+                    success: function (data) {
+                        if ($("#Ward option").length < 3) {
+                            $.each(data, function (i, district) {
+                                $("#Ward").append($('<option></option>').val(district.Name).html(district.Name))
+                            })
+                        }
+                    }
+                });
+        });
+    })
+</script>

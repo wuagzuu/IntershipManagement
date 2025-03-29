@@ -1,0 +1,409 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.title | Quản lý thực tập - Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Admin & Dashboard" name="description" />
+    <meta content="Pichforest" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+    <style>
+        #loadingIndicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            z-index: 9999; /* Đặt z-index để nó nằm trên tất cả các phần tử khác */
+        }
+
+        #spin {
+            width: 3rem !important;
+            height: 3rem !important;
+        }
+    </style>
+    <!-- plugin css -->
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="/assets/libs/choices.js/public/assets/styles/choices.min.css" rel="stylesheet" type="text/css" />
+    <!-- flatpickr css -->
+    <link href="/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/assets/libs/simonwep/pickr/themes/classic.min.css" /> <!-- 'classic' theme -->
+    <link rel="stylesheet" href="/assets/libs/simonwep/pickr/themes/monolith.min.css" /> <!-- 'monolith' theme -->
+    <link rel="stylesheet" href="/assets/libs/simonwep/pickr/themes/nano.min.css" /> <!-- 'nano' theme -->
+    <link href="/assets/libs/jsvectormap/css/jsvectormap.min.css" rel="stylesheet" type="text/css" />
+    <!-- Plugins css -->
+    <!-- dropzone css -->
+    <link href="/assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet" type="text/css" />
+    <!-- Bootstrap Css -->
+    <link href="/assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="/assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+
+    <link href="https://kendo.cdn.telerik.com/themes/6.6.0/default/default-main.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2023.2.718/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2023.2.718/js/kendo.all.min.js"></script>
+    <script src="~/Scripts/kendo-ui-license.js"></script>
+</head>
+<body>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>
+    <div id="layout-wrapper">
+        <header id="page-topbar">
+            <div class="navbar-header">
+                <div class="d-flex">
+                    <!-- LOGO -->
+                    <div class="navbar-brand-box">
+                        <a href="#" class="logo logo-dark">
+                            <span class="logo-sm">
+                                <img src="" alt="" height="22">
+                            </span>
+                            <span class="logo-lg">
+                                <img src="" alt="" height="22">
+                            </span>
+                        </a>
+
+                        <a href="#" class="logo logo-light">
+                            <span class="logo-sm">
+                                <img src="" alt="" height="22">
+                            </span>
+                            <span class="logo-lg">
+                                <img src="" alt="" height="22">
+                            </span>
+                        </a>
+                    </div>
+
+                    <button type="button" class="btn btn-sm px-3 font-size-16 header-item vertical-menu-btn">
+                        <i class="fa fa-fw fa-bars"></i>
+                    </button>
+                </div>
+
+                <div class="d-flex">
+                    @* Thông báo *@
+                    @{ Html.RenderAction("_LoadNotification", "Home");}
+
+                    @* Profile *@
+                    <div class="dropdown d-inline-block">
+                        <button type="button" class="btn header-item user text-start d-flex align-items-center" id="page-header-user-dropdown"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="rounded-circle header-profile-user" src="/assets/images/users/avatar-3.jpg"
+                                 alt="Header Avatar">
+                            <span class="ms-2 d-none d-sm-block user-item-desc">
+                                <span class="user-name">@User.Identity.Name</span>
+                                <span class="user-sub-title">@Session["RoleId"]</span>
+                            </span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end pt-0">
+                            <div class="p-3 bg-primary border-bottom">
+                                <h6 class="mb-0 text-white">@Session["FullNameUser"]</h6>
+                                <p class="mb-0 font-size-11 text-white-50 fw-semibold">@Session["EmailUser"]</p>
+                            </div>
+                            <a class="dropdown-item" href="/admin/profile"><i class="mdi mdi-account-circle text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Tài khoản</span></a>
+
+                            <div class="dropdown-divider"></div>
+
+                            <a class="dropdown-item d-flex align-items-center" href="/admin/manage/changepassword"><i class="mdi mdi-cog-outline text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Đổi mật khẩu</span></a>
+                            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()"><i class="mdi mdi-logout text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Logout</span></a>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- ========== Left Sidebar Start ========== -->
+        <div class="vertical-menu">
+
+            <!-- LOGO -->
+            <div class="navbar-brand-box">
+                <a href="#" class="logo logo-dark">
+                    <span class="logo-lg">
+                        <img src="/assets/images/logo-dark.png" alt="" height="20">
+                    </span>
+                </a>
+            </div>
+
+            <button type="button" class="btn btn-sm px-3 font-size-16 header-item vertical-menu-btn">
+                <i class="fa fa-fw fa-bars"></i>
+            </button>
+
+            <div data-simplebar class="sidebar-menu-scroll">
+
+                <!--- Sidemenu -->
+                <div id="sidebar-menu">
+                    <!-- Left Menu Start -->
+                    <ul class="metismenu list-unstyled" id="side-menu">
+                        @if (User.IsInRole("Admin - Quản trị toàn hệ thống"))
+                        {
+                            <li class="menu-title" data-key="t-dashboards">Quản lý người dùng</li>
+                            <li>
+                                <a href="/admin/user">
+                                    <i class="icon nav-icon" data-feather="users"></i>
+                                    <span class="menu-item" data-key="t-analytics">Danh sách tài khoản</span>
+                                </a>
+                            </li>
+                            <li class="menu-title" data-key="t-applications">Quản lý cấu hình</li>
+                            <li>
+                                <a href="/admin/major">
+                                    <i class="icon nav-icon" data-feather="activity"></i>
+                                    <span class="menu-item" data-key="t-analytics">Chuyên ngành</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/courseclass">
+                                    <i class="icon nav-icon" data-feather="home"></i>
+                                    <span class="menu-item" data-key="t-analytics">Nhóm</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/enterprise">
+                                    <i class="icon nav-icon" data-feather="trello"></i>
+                                    <span class="menu-item" data-key="t-analytics">Doanh nghiệp</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/internshipassignment">
+                                    <i class="icon nav-icon" data-feather="link"></i>
+                                    <span class="menu-item" data-key="t-analytics">Phân công thực tập</span>
+                                </a>
+                            </li>
+                            <li class="menu-title" data-key="t-sales">Quản lý báo cáo</li>
+                            <li>
+                                <a href="/admin/statistics">
+                                    <i class="icon nav-icon" data-feather="pie-chart"></i>
+                                    <span class="menu-item" data-key="t-analytics">Báo cáo tổng quát</span>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Giáo viên"))
+                        {
+                            <li class="menu-title" data-key="t-dashboards">Quản lý sinh viên</li>
+                            <li>
+                                <a href="/admin/user">
+                                    <i class="icon nav-icon" data-feather="users"></i>
+                                    <span class="menu-item" data-key="t-analytics">Danh sách tài khoản</span>
+                                </a>
+                            </li>
+                            <li class="menu-title" data-key="t-applications">Quản lý thực tập</li>
+                            <li>
+                                <a href="/admin/internship">
+                                    <i class="icon nav-icon" data-feather="file"></i>
+                                    <span class="menu-item" data-key="t-analytics">Phiếu thực tập</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/reportsmanager">
+                                    <i class="icon nav-icon" data-feather="book-open"></i>
+                                    <span class="menu-item" data-key="t-analytics">Báo cáo thực tập</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/admin/teacherreports">
+                                    <i class="icon nav-icon" data-feather="message-circle"></i>
+                                    <span class="menu-item" data-key="t-analytics">Theo dõi báo cáo</span>
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Sinh viên"))
+                        {
+                            <li class="menu-title" data-key="t-dashboards">Quản lý thực tập</li>
+                            <li>
+                                <a href="/admin/internship">
+                                    <i class="icon nav-icon" data-feather="file-text"></i>
+                                    <span class="menu-item" data-key="t-analytics">Đăng ký thực tập</span>
+                                </a>
+                            </li>
+                            <li class="menu-title" data-key="t-applications">Quản lý báo cáo</li>
+                            <li>
+                                <a href="/admin/studentreports">
+                                    <i class="icon nav-icon" data-feather="award"></i>
+                                    <span class="menu-item" data-key="t-analytics">Báo cáo thực tập</span>
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+                <!-- Sidebar -->
+            </div>
+        </div>
+        <!-- Left Sidebar End -->
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    @if (TempData["AlertMessage"] != null)
+                    {
+                        <div id="AlertBox" class="alert @TempData["AlertType"] alert-dismissible hide" role="alert">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>@TempData["Alert"]</strong> @TempData["AlertMessage"]
+                        </div>
+                        @*<div id="AlertBox" class="alert @TempData["AlertType"] alert-danger alert-dismissible fade show" role="alert">
+                                <i class="uil uil-exclamation-octagon me-2"></i>
+                                <strong>@TempData["Alert"]</strong> @TempData["AlertMessage"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>*@
+                    }
+                    @RenderBody()
+                    <div id="loadingIndicator">
+                        <div id="spin" class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <!-- sample modal content -->
+                    <div id="createmodal" class="modal fade" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content" id="createbody">
+
+
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                </div>
+                <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
+
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <script>document.write(new Date().getFullYear())</script> &copy; ...., JSC.
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="text-sm-end d-none d-sm-block">
+                                <i class="mdi mdi-heart text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- end main content-->
+
+    </div>
+    <!-- END layout-wrapper -->
+    <script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+    <!-- JAVASCRIPT -->
+    <script src="/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/libs/metismenujs/metismenujs.min.js"></script>
+    <script src="/assets/libs/simplebar/simplebar.min.js"></script>
+    <script src="/assets/libs/feather-icons/feather.min.js"></script>
+
+    <script src="/assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
+
+    <!-- flatpickr js -->
+    <script src="/assets/libs/flatpickr/flatpickr.min.js"></script>
+    @*<script src="/assets/js/pages/project-create.init.js"></script>*@
+    @*<script src="/assets/js/pages/form-advanced.init.js"></script>*@
+    <!-- form wizard init -->
+    @*<script src="/assets/js/pages/form-wizard.init.js"></script>*@
+    <!-- init js -->
+    <script src="/assets/js/app.js"></script>
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @*form-advanced*@
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var e = document.querySelectorAll("[data-trigger]");
+            for (i = 0; i < e.length; ++i) {
+                var a = e[i];
+                new Choices(a, {
+                    placeholderValue: "This is a placeholder set in the config",
+                    searchPlaceholderValue: "This is a search placeholder"
+                })
+            }
+            new Choices("#choices-multiple-remove-button", {
+                removeItemButton: !0
+            }),
+                new Choices(document.getElementById("choices-multiple-groups"))
+        });
+
+        //flatpickr("#datepicker-minmax", { minDate: "today", maxDate: (new Date).fp_incr(14) })
+    </script>
+    <script>
+        $(function () {
+            $('#AlertBox').removeClass('hide');
+            $('#AlertBox').delay(5000).slideUp(500);
+        });
+    </script>
+    <script type="text/javascript">
+        function loadModalNotif() {
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Home/loadModalNotif",
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $('#createbody').html(response);
+                    $('#createmodal').modal('show');
+                }
+            });
+        }
+        function loadDataNotif() {
+            $.ajax({
+                type: "POST",
+                url: "/Admin/Home/loadDataNotif",
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $.each($.parseJSON(response), function (i, notif) {
+                        var time = dateFormat(new Date(parseInt((notif.Createdate).match(/\d+/)[0])));
+                        var read = (notif.IsRead == true) ? "" : "custom-bg-purple";
+                        $(".list-item-notif").append('<li class="dropdown-item" id="' + notif.Id + '"><a href="' + notif.DetailsURL + '" class="notification-item" onclick="isReadNotif(' + notif.Id + ')"><i class="fa fa-bullhorn ' + read + '"></i><p><span class="text">' + notif.Title + '</span> <span class="timestamp">' + time + '</span></p></a></li>');
+                    })
+                }
+            });
+        }
+        function dateFormat(d) {
+            return ((d.getDate() + "").padStart(2, '0') + "/" + (d.getMonth() + 1) + "").padStart(2, '0') + "/" + d.getFullYear();
+        }
+        $(document).ready(function () {
+            loadDataNotif();
+
+            function setTotalNotification(totalNotif) {
+                console.log(totalNotif);
+                $("#messages").html(totalNotif);
+
+                if (totalNotif > 0) {
+                    //loadDataNotif();
+                    //khong hien thi modal nua
+                    //loadModalNotif();
+                }
+
+            }
+
+            var hub = $.connection.notificationHub;
+            //Client Call
+            hub.client.broadcaastNotif = function (totalNotif) {
+                setTotalNotification(totalNotif)
+            };
+            //$.connection.hub.start().done(function () { });
+            $.connection.hub.start()
+                .done(function () {
+                    hub.server.getNotification();
+                })
+                .fail(function () {
+                });
+        });
+    </script>
+    <script src="~/ckeditor/ckeditor.js"></script>
+    <script src="~/ckfinder/ckfinder.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

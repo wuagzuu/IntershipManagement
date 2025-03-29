@@ -1,0 +1,116 @@
+﻿@model IEnumerable<IntershipManagement.Areas.Admin.Data.ReportTemplateViewModel>
+
+@{
+    ViewBag.Title = "Báo cáo thực tập";
+    var index = 0;
+}
+<div class="card">
+    <div class="card-header"><h3 class="card-title">Danh sách mẫu báo cáo</h3></div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <form class="needs-validation" novalidate>
+                    <div class="col-md-2 mb-2">
+                        <input class="form-control" id="myInput1" type="text" placeholder="Tìm kiếm...">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Table database</h3><div id="error-message" style="display: none;"></div>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped" id="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Tiêu đề</th>
+                    <th>Hạn nộp</th>
+                    <th>Ngày tạo</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody id="myTable1">
+                @foreach (var item in Model)
+                {
+                    index++;
+                    <tr>
+                        <td style="display:none">@item.Template.Id</td>
+                        <td style="display:none">@item.Template.Round</td>
+                        <td>@index</td>
+                        <td>
+                            @item.Template.Title
+                        </td>
+                        <td>
+                            @item.Template.Deadline.Value.ToShortDateString()
+                        </td>
+                        <td>
+                            @item.Template.CreatedDate.Value.ToShortDateString()
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                @if (User.IsInRole("Sinh viên"))
+                                {
+                                    if (item.Report != null)
+                                    {
+                                        if (item.Report.Status == "Đúng hạn" && item.Report?.IsCompleted == 1)
+                                        {
+                                            <a href="#" class="fas fa-eye details" title="xem kết quả"></a>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <a class="fas fa-download edit" title="tải mẫu báo cáo" href="/admin/studentreports/download?id=@item.Template.Id"></a>
+                                        <a href="#" class="fas fa-stopwatch confirm" title="nộp báo cáo"></a>
+                                    }
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="row">
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $("#myInput1").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable1 tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+        $("#table .confirm").click(function () {
+            var reportTemplateId = $(this).closest("tr").find("td").eq(0).html();
+            $.ajax({
+                type: "GET",
+                url: "/Admin/StudentReports/Submit?templateId=" + reportTemplateId,
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $('#createbody').html(response);
+                    $('#createmodal').modal('show');
+                }
+            });
+        });
+        $("#table .details").click(function () {
+            var round = $(this).closest("tr").find("td").eq(1).html();
+            $.ajax({
+                type: "GET",
+                url: "/Admin/StudentReports/ViewResults?round=" + round,
+                contentType: "application/json; charset=utf-8",
+                dataType: "html",
+                success: function (response) {
+                    $('#createbody').html(response);
+                    $('#createmodal').modal('show');
+                }
+            });
+        });
+    </script>
+}

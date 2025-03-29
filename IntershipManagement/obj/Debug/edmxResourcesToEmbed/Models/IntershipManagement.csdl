@@ -1,0 +1,475 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="IntershipManagementModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="AspNetRole">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="AspNetUsers" Relationship="Self.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
+  </EntityType>
+  <EntityType Name="AspNetUserClaim">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AspNetUser" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaims" ToRole="AspNetUsers" />
+  </EntityType>
+  <EntityType Name="AspNetUserLogin">
+    <Key>
+      <PropertyRef Name="LoginProvider" />
+      <PropertyRef Name="ProviderKey" />
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="AspNetUser" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
+  </EntityType>
+  <EntityType Name="AspNetUser">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+    <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+    <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+    <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+    <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Address" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Ward" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="District" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Province" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="FullName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="IDCARD" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+    <Property Name="Createby" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Editdate" Type="DateTime" Precision="3" />
+    <Property Name="Editby" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="IsDelete" Type="Int32" />
+    <Property Name="StatusConfirm" Type="Int32" />
+    <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Trainer" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
+    <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+    <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+    <Property Name="MajorId" Type="Int32" />
+    <NavigationProperty Name="Majors" Relationship="IntershipManagementModel.MajorTeacher" FromRole="AspNetUser" ToRole="Major" />
+    <Property Name="IsTeacher" Type="Boolean" />
+    <Property Name="IsStudent" Type="Boolean" />
+    <NavigationProperty Name="StudentClasses" Relationship="IntershipManagementModel.FK__StudentCl__Stude__60A75C0F" FromRole="AspNetUser" ToRole="StudentClass" />
+    <Property Name="IsFirstLogin" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CountryCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="CommonName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="FormalName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="CountryType" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="CountrySubType" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Sovereignty" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Capital" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="CurrencyCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="CurrencyName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="TelephoneCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="CountryCode3" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="CountryNumber" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="InternetCountryCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="SortOrder" Type="Int32" />
+    <Property Name="IsPublished" Type="Boolean" />
+    <Property Name="Flags" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <NavigationProperty Name="Provinces" Relationship="Self.FK_Province_Country" FromRole="Country" ToRole="Province" />
+  </EntityType>
+  <EntityType Name="District">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Type" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="LatiLongTude" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ProvinceId" Type="Int32" Nullable="false" />
+    <Property Name="SortOrder" Type="Int32" />
+    <Property Name="IsPublished" Type="Boolean" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <NavigationProperty Name="Province" Relationship="Self.FK_District_Province" FromRole="District" ToRole="Province" />
+    <NavigationProperty Name="Wards" Relationship="Self.FK_Ward_District" FromRole="District" ToRole="Ward" />
+  </EntityType>
+  <EntityType Name="Edit_Log">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+    <Property Name="Code" Type="Int64" />
+    <Property Name="Id_User" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Enterprise">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Createby" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+    <Property Name="Editby" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Editdate" Type="DateTime" Precision="3" />
+    <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Province" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Hotline" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Internship">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TeacherId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+    <Property Name="StudentId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+    <Property Name="MajorId" Type="Int32" />
+    <Property Name="IsConfirm" Type="Int32" />
+    <Property Name="Confirmby" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" />
+    <Property Name="Createby" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+    <Property Name="Editby" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Editdate" Type="DateTime" Precision="3" />
+    <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EnterpriseId" Type="Int32" />
+    <Property Name="JobId" Type="Int32" />
+    <Property Name="StudentName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="TeacherName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="MajorName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="EnterpriseName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="JobName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="StudentCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Job">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Slot" Type="Int32" />
+    <Property Name="EnterpriseId" Type="Int32" />
+    <Property Name="Createby" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+    <Property Name="Editby" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Editdate" Type="DateTime" Precision="3" />
+    <Property Name="MajorId" Type="Int32" />
+  </EntityType>
+  <EntityType Name="Major">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Createby" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+    <Property Name="Editby" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Editdate" Type="DateTime" Precision="3" />
+    <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IsUse" Type="Int32" />
+    <NavigationProperty Name="AspNetUsers" Relationship="IntershipManagementModel.MajorTeacher" FromRole="Major" ToRole="AspNetUser" />
+  </EntityType>
+  <EntityType Name="Notification">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="Int32" />
+    <Property Name="Details" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Title" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="DetailsURL" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="SentTo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+    <Property Name="IsRead" Type="Boolean" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <Property Name="IsReminder" Type="Boolean" />
+    <Property Name="Code" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="NotificationType" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Province">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Type" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="TelephoneCode" Type="Int32" />
+    <Property Name="ZipCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="CountryId" Type="Int32" Nullable="false" />
+    <Property Name="CountryCode" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+    <Property Name="SortOrder" Type="Int32" />
+    <Property Name="IsPublished" Type="Boolean" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <NavigationProperty Name="Country" Relationship="Self.FK_Province_Country" FromRole="Province" ToRole="Country" />
+    <NavigationProperty Name="Districts" Relationship="Self.FK_District_Province" FromRole="Province" ToRole="District" />
+  </EntityType>
+  <EntityType Name="Ward">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Type" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="LatiLongTude" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="DistrictID" Type="Int32" Nullable="false" />
+    <Property Name="SortOrder" Type="Int32" Nullable="false" />
+    <Property Name="IsPublished" Type="Boolean" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <NavigationProperty Name="District" Relationship="Self.FK_Ward_District" FromRole="Ward" ToRole="District" />
+  </EntityType>
+  <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+    <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="AspNetUserClaims" Type="Self.AspNetUserClaim" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUsers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserClaims">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+    <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="AspNetUserLogins" Type="Self.AspNetUserLogin" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUsers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserLogins">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Province_Country">
+    <End Role="Country" Type="Self.Country" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Province" Type="Self.Province" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Country">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Province">
+        <PropertyRef Name="CountryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_District_Province">
+    <End Role="Province" Type="Self.Province" Multiplicity="1" />
+    <End Role="District" Type="Self.District" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Province">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="District">
+        <PropertyRef Name="ProvinceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Ward_District">
+    <End Role="District" Type="Self.District" Multiplicity="1" />
+    <End Role="Ward" Type="Self.Ward" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="District">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Ward">
+        <PropertyRef Name="DistrictID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AspNetUserRoles">
+    <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
+    <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
+  </Association>
+  <EntityContainer Name="IntershipManagementEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
+    <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
+    <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
+    <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
+    <EntitySet Name="Countries" EntityType="Self.Country" />
+    <EntitySet Name="Districts" EntityType="Self.District" />
+    <EntitySet Name="Edit_Log" EntityType="Self.Edit_Log" />
+    <EntitySet Name="Enterprises" EntityType="Self.Enterprise" />
+    <EntitySet Name="Internships" EntityType="Self.Internship" />
+    <EntitySet Name="Jobs" EntityType="Self.Job" />
+    <EntitySet Name="Majors" EntityType="Self.Major" />
+    <EntitySet Name="Notifications" EntityType="Self.Notification" />
+    <EntitySet Name="Provinces" EntityType="Self.Province" />
+    <EntitySet Name="Wards" EntityType="Self.Ward" />
+    <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Province_Country" Association="Self.FK_Province_Country">
+      <End Role="Country" EntitySet="Countries" />
+      <End Role="Province" EntitySet="Provinces" />
+    </AssociationSet>
+    <AssociationSet Name="FK_District_Province" Association="Self.FK_District_Province">
+      <End Role="Province" EntitySet="Provinces" />
+      <End Role="District" EntitySet="Districts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Ward_District" Association="Self.FK_Ward_District">
+      <End Role="District" EntitySet="Districts" />
+      <End Role="Ward" EntitySet="Wards" />
+    </AssociationSet>
+    <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
+      <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+    </AssociationSet>
+    <EntitySet Name="Reports" EntityType="IntershipManagementModel.Report" />
+    <EntitySet Name="ReportTemplates" EntityType="IntershipManagementModel.ReportTemplate" />
+    <AssociationSet Name="MajorTeacher" Association="IntershipManagementModel.MajorTeacher">
+      <End Role="Major" EntitySet="Majors" />
+      <End Role="AspNetUser" EntitySet="AspNetUsers" />
+    </AssociationSet>
+    <EntitySet Name="StudentClasses" EntityType="IntershipManagementModel.StudentClass" />
+    <AssociationSet Name="FK__StudentCl__Stude__60A75C0F" Association="IntershipManagementModel.FK__StudentCl__Stude__60A75C0F">
+      <End Role="AspNetUser" EntitySet="AspNetUsers" />
+      <End Role="StudentClass" EntitySet="StudentClasses" />
+    </AssociationSet>
+    <EntitySet Name="InternshipApplications" EntityType="IntershipManagementModel.InternshipApplication" />
+    <EntitySet Name="CourseClasses" EntityType="IntershipManagementModel.CourseClass" />
+    <AssociationSet Name="FK__Internshi__Cours__6FE99F9F" Association="IntershipManagementModel.FK__Internshi__Cours__6FE99F9F">
+      <End Role="CourseClass" EntitySet="CourseClasses" />
+      <End Role="InternshipApplication" EntitySet="InternshipApplications" />
+    </AssociationSet>
+    <AssociationSet Name="FK__StudentCl__Class__619B8048" Association="IntershipManagementModel.FK__StudentCl__Class__619B8048">
+      <End Role="CourseClass" EntitySet="CourseClasses" />
+      <End Role="StudentClass" EntitySet="StudentClasses" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Report">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TemplateId" Type="Int32" />
+    <Property Name="StudentId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+    <Property Name="SubmissionDate" Type="DateTime" Precision="3" />
+    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TeacherComments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Grade" Type="Decimal" Precision="4" Scale="2" />
+    <Property Name="SubmissionRound" Type="Int32" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="TeacherId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+    <Property Name="IsCompleted" Type="Int32" />
+  </EntityType>
+  <EntityType Name="ReportTemplate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TeacherId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+    <Property Name="Title" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="Deadline" Type="DateTime" Precision="3" />
+    <Property Name="FilePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Round" Type="Int32" />
+  </EntityType>
+  <Association Name="MajorTeacher">
+    <End Type="IntershipManagementModel.Major" Role="Major" Multiplicity="*" />
+    <End Type="IntershipManagementModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
+  </Association>
+  <EntityType Name="StudentClass">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StudentId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="ClassId" Type="Int32" Nullable="false" />
+    <Property Name="EnrollmentDate" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="AspNetUser" Relationship="IntershipManagementModel.FK__StudentCl__Stude__60A75C0F" FromRole="StudentClass" ToRole="AspNetUser" />
+    <NavigationProperty Name="CourseClass" Relationship="IntershipManagementModel.FK__StudentCl__Class__619B8048" FromRole="StudentClass" ToRole="CourseClass" />
+  </EntityType>
+  <Association Name="FK__StudentCl__Stude__60A75C0F">
+    <End Type="IntershipManagementModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+    <End Type="IntershipManagementModel.StudentClass" Role="StudentClass" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="StudentClass">
+        <PropertyRef Name="StudentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="InternshipApplication">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="CourseClassId" Type="Int32" Nullable="false" />
+    <Property Name="ApplicationDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="CourseClass" Relationship="IntershipManagementModel.FK__Internshi__Cours__6FE99F9F" FromRole="InternshipApplication" ToRole="CourseClass" />
+    <Property Name="TeacherId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="MajorId" Type="Int32" />
+  </EntityType>
+  <EntityType Name="CourseClass">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="StartDate" Type="DateTime" Precision="3" />
+    <Property Name="EndDate" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="InternshipApplications" Relationship="IntershipManagementModel.FK__Internshi__Cours__6FE99F9F" FromRole="CourseClass" ToRole="InternshipApplication" />
+    <NavigationProperty Name="StudentClasses" Relationship="IntershipManagementModel.FK__StudentCl__Class__619B8048" FromRole="CourseClass" ToRole="StudentClass" />
+  </EntityType>
+  <Association Name="FK__Internshi__Cours__6FE99F9F">
+    <End Type="IntershipManagementModel.CourseClass" Role="CourseClass" Multiplicity="1" />
+    <End Type="IntershipManagementModel.InternshipApplication" Role="InternshipApplication" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CourseClass">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="InternshipApplication">
+        <PropertyRef Name="CourseClassId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__StudentCl__Class__619B8048">
+    <End Type="IntershipManagementModel.CourseClass" Role="CourseClass" Multiplicity="1" />
+    <End Type="IntershipManagementModel.StudentClass" Role="StudentClass" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CourseClass">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="StudentClass">
+        <PropertyRef Name="ClassId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

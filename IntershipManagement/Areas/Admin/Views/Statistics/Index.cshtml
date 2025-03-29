@@ -1,0 +1,284 @@
+﻿@model IntershipManagement.Areas.Admin.Data.InternshipStatisticsViewModel
+
+@{
+    ViewBag.Title = "Thống kê thực tập";
+}
+<style>
+    .panel {
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    }
+
+    .panel-heading {
+        padding: 15px;
+    }
+
+    .panel-body {
+        padding: 20px;
+    }
+
+    .stats-number {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        margin: 10px 0;
+    }
+
+    .stats-label {
+        text-align: center;
+        color: #666;
+    }
+
+    .chart-container {
+        position: relative;
+        margin: auto;
+        height: 300px;
+    }
+
+    .dataTables_wrapper {
+        padding: 15px 0;
+    }
+
+    .btn-export {
+        margin-left: 10px;
+    }
+
+    .filter-section {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<!-- Card Bộ lọc -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Bộ lọc thống kê</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <form class="needs-validation" novalidate>
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <label>Từ ngày</label>
+                            <input type="date" class="form-control" id="fromDate" name="fromDate">
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label>Đến ngày</label>
+                            <input type="date" class="form-control" id="toDate" name="toDate">
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label>&nbsp;</label>
+                            <button type="button" class="btn btn-primary form-control" id="btnFilter">
+                                <i class="ti ti-filter"></i> Lọc
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Card Tổng quan -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Tổng quan</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stats-box bg-primary text-white p-3 rounded">
+                    <h4>Tổng số sinh viên</h4>
+                    <h2>@Model.TotalStudents</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-box bg-success text-white p-3 rounded">
+                    <h4>Tổng số doanh nghiệp</h4>
+                    <h2>@Model.TotalEnterprises</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-box bg-info text-white p-3 rounded">
+                    <h4>Tổng số GVHD</h4>
+                    <h2>@Model.TotalTeachers</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-box bg-warning text-white p-3 rounded">
+                    <h4>Tỷ lệ hoàn thành</h4>
+                    <h2>@(((double)Model.CompletedCount / Model.TotalStudents * 100).ToString("F1"))%</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Card Thống kê theo chuyên ngành -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Thống kê theo chuyên ngành</h3>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-2">
+                <input class="form-control" id="majorSearch" type="text" placeholder="Tìm kiếm...">
+            </div>
+            <div class="col-md-10 text-right">
+                <button type="submit" class="btn btn-primary">Lọc</button>
+                @Html.ActionLink("Xuất Excel", "ExportExcel", new { fromDate = ViewBag.FromDate, toDate = ViewBag.ToDate }, new { @class = "btn btn-success" })
+            </div>
+        </div>
+        <table class="table table-striped" id="majorTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Mã ngành</th>
+                    <th>Tên ngành</th>
+                    <th>Số sinh viên</th>
+                    <th>Tỷ lệ hoàn thành</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ var index = 0; }
+                @foreach (var major in Model.MajorStatistics)
+                {
+                    index++;
+                    <tr>
+                        <td>@index</td>
+                        <td>@major.MajorCode</td>
+                        <td>@major.MajorName</td>
+                        <td>@major.StudentCount</td>
+                        <td>@major.CompletionRate.ToString("F2")%</td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="fas fa-eye edit" onclick="showMajorDetails(@major.MajorId)" title=" xem chi tiết" href="#"></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Card Biểu đồ thống kê -->
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Biểu đồ thống kê</h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <canvas id="majorChart"></canvas>
+            </div>
+            <div class="col-md-6">
+                <canvas id="enterpriseChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <script>
+
+        $(document).ready(function() {
+            // Khởi tạo DatePicker
+            $('.datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true,
+                language: 'vi'
+            });
+
+            // Khởi tạo DataTable
+            $('#majorTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Vietnamese.json'
+                },
+                pageLength: 10,
+                responsive: true
+            });
+            // Biểu đồ phân bố theo chuyên ngành
+            var majorCtx = document.getElementById('majorChart').getContext('2d');
+            new Chart(majorCtx, {
+                type: 'pie',
+                data: {
+                    labels: @Html.Raw(Json.Encode(Model.MajorStatistics.Select(m => m.MajorName))),
+                    datasets: [{
+                        data: @Html.Raw(Json.Encode(Model.MajorStatistics.Select(m => m.StudentCount))),
+                        backgroundColor: [
+                            '#FF6384',
+                            '#36A2EB',
+                            '#FFCE56',
+                            '#4BC0C0',
+                            '#9966FF',
+                            '#FF9F40'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Phân bố sinh viên theo chuyên ngành'
+                        }
+                    }
+                }
+            });
+
+            // Biểu đồ phân bố theo doanh nghiệp
+            var enterpriseCtx = document.getElementById('enterpriseChart').getContext('2d');
+            new Chart(enterpriseCtx, {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(Json.Encode(Model.EnterpriseStatistics.Select(e => e.EnterpriseName))),
+                    datasets: [{
+                        label: 'Số sinh viên',
+                        data: @Html.Raw(Json.Encode(Model.EnterpriseStatistics.Select(e => e.StudentCount))),
+                        backgroundColor: '#36A2EB'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+
+        function showMajorDetails(majorId) {
+            $.ajax({
+                url: '@Url.Action("Details", "Statistics")',
+                data: { majorId: majorId },
+                type: 'GET',
+                success: function (result) {
+                    $('#createbody').html(result);
+                    $('#createmodal').modal('show');
+                },
+                error: function (error) {
+                    alert('Có lỗi xảy ra khi tải dữ liệu');
+                }
+            });
+        }
+
+        // Đăng ký sự kiện đóng modal
+        $('#majorDetailsModal').on('hidden.bs.modal', function () {
+            $(this).find('.modal-content').html('');
+        });
+    </script>
+}

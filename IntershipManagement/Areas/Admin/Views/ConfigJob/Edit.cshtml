@@ -1,0 +1,49 @@
+﻿@model IntershipManagement.Models.Job
+@{
+
+}
+<div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel">Thông tin vị trí</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close">
+    </button>
+</div>
+<div class="modal-body">
+    @using (Html.BeginForm("EditConfirm", "ConfigJob", FormMethod.Post, new { area = "Admin", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.EnterpriseId)
+            @Html.HiddenFor(model => model.Createdate)
+            @Html.HiddenFor(model => model.Createby)
+            <div class="mb-3 row">
+                <label for="Code" class="col-md-4 col-form-label">Chuyên ngành</label>
+                <div class="col-md-6">
+                    @Html.DropDownListFor(model => model.MajorId, new SelectList(ViewBag.ListMajor, "Id", "Name"), "-- Chọn --", new { @class = "btn btn-secondary dropdown-toggle form-control", @required = "required" })
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Name" class="col-md-4 col-form-label">Vị trí</label>
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Province" class="col-md-4 col-form-label">Số lượng ứng tuyển</label>
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Slot, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light"
+                    data-bs-dismiss="modal">
+                Thoát
+            </button>
+            <button type="submit" class="btn btn-primary ">Lưu</button>
+        </div>
+    }
+</div>

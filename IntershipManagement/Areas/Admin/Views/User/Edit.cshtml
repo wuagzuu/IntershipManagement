@@ -1,0 +1,192 @@
+﻿@model IntershipManagement.Models.AspNetUser
+@{
+    var apiUrl = System.Configuration.ConfigurationManager.AppSettings["DOMAIN"];
+}
+<div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel">Thông tin tài khoản</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close">
+    </button>
+</div>
+<div class="modal-body">
+    @using (Html.BeginForm("EditConfirm", "User", FormMethod.Post, new { area = "Admin", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.EmailConfirmed)
+            @Html.HiddenFor(model => model.PasswordHash)
+            @Html.HiddenFor(model => model.SecurityStamp)
+            @Html.HiddenFor(model => model.PhoneNumberConfirmed)
+            @Html.HiddenFor(model => model.TwoFactorEnabled)
+            @Html.HiddenFor(model => model.LockoutEndDateUtc)
+            @Html.HiddenFor(model => model.LockoutEnabled)
+            @Html.HiddenFor(model => model.AccessFailedCount)
+            @Html.HiddenFor(model => model.Createdate)
+            @Html.HiddenFor(model => model.Createby)
+            @Html.HiddenFor(model => model.MajorId)
+            <div class="mb-3 row">
+                <label for="example-name-input" class="col-md-2 col-form-label">Tài khoản</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @pattern = @"^[A-Za-z0-9!@#$%^&*_\-]*$", @placeholder = "Tài khoản", @required = "required", @readonly = "readonly" } })
+                </div>
+            </div>
+            @if (User.IsInRole("Admin - Quản trị toàn hệ thống"))
+            {
+                <div class="mb-3 row">
+                    <label for="example-type-input" class="col-md-2 col-form-label">Quyền</label>
+                    <div class="col-md-10">
+                        <select id="Roler" name="Roler" class="form-control">
+                            <option>@Model.AspNetRoles.FirstOrDefault().Name</option>
+                            @foreach (var item in ViewBag.role)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="mb-3 row">
+                    <label for="example-type-input" class="col-md-2 col-form-label">Quyền</label>
+                    <div class="col-md-10">
+                        @Html.Editor("Roler", new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @Value = Model.AspNetRoles.FirstOrDefault().Name } })
+                    </div>
+                </div>
+            }
+            <div class="mb-3 row">
+                <label for="example-tel-input" class="col-md-2 col-form-label">Mã định danh</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mã định danh" } })
+                </div>
+
+            </div>
+            <div class="mb-3 row">
+                <label for="example-tel-input" class="col-md-2 col-form-label">Số điện thoại</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Số điện thoại" } })
+                </div>
+
+            </div>
+            <div class="mb-3 row">
+                <label for="example-name-input" class="col-md-2 col-form-label">Họ tên</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Tên đầy đủ" } })
+                </div>
+
+            </div>
+            <div class="mb-3 row">
+                <label for="example-email-input" class="col-md-2 col-form-label">Email</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email" } })
+                </div>
+
+            </div>
+
+            <div class="mb-3 row">
+                <label for="example-name-input" class="col-md-2 col-form-label">Thành phố/ Tỉnh</label>
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.Province, new List<SelectListItem> { new SelectListItem { Value = Model.Province, Text = Model.Province } }, new { @class = "form-control" })
+                </div>
+
+            </div>
+            <div class="mb-3 row">
+                <label for="example-name-input" class="col-md-2 col-form-label">Quận/ Huyện</label>
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.District, new List<SelectListItem> { new SelectListItem { Value = Model.District, Text = Model.District } }, new { @class = "form-control" })
+                </div>
+
+            </div>
+
+            <div class="mb-3 row">
+                <label for="example-name-input" class="col-md-2 col-form-label">Phường/ Xã</label>
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.Ward, new List<SelectListItem> { new SelectListItem { Value = Model.Ward, Text = Model.Ward } }, new { @class = "form-control" })
+                </div>
+
+            </div>
+            <div class="mb-3 row">
+                <label for="example-name-input" class="col-md-2 col-form-label">Địa chỉ</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", @placeholder = "Địa chỉ" } })
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light"
+                    data-bs-dismiss="modal">
+                Thoát
+            </button>
+            <button type="submit" class="btn btn-primary ">Lưu</button>
+        </div>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#Province").click(function () {
+            $.ajax
+                ({
+                    url: '/User/GetProvince',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        $("#District").empty();
+                        $("#Ward").empty();
+                        if ($("#Province option").length < 3) {
+                            $.each(data, function (i, province) {
+                                $("#Province").append($('<option></option>').val(province.Id).html(province.Name))
+                            })
+                        }
+                    }
+                });
+        });
+        $("#District").click(function () {
+            var name = $("#Province").val();
+            $.ajax
+                ({
+                    url: '/User/GetDistrict',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        text: name
+                    }),
+                    success: function (data) {
+                        $("#Ward").empty();
+                        if ($("#District option").length < 3) {
+                            $.each(data, function (i, district) {
+                                $("#District").append($('<option></option>').val(district.Id).html(district.Name))
+                            })
+                        }
+                    }
+                });
+        });
+        $("#Ward").click(function () {
+            var name = $("#District").val();
+            $.ajax
+                ({
+                    url: '/User/GetWard',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        text: name
+                    }),
+                    success: function (data) {
+                        if ($("#Ward option").length < 3) {
+                            $.each(data, function (i, district) {
+                                $("#Ward").append($('<option></option>').val(district.Id).html(district.Name))
+                            })
+                        }
+                    }
+                });
+        });
+    })
+</script>
+

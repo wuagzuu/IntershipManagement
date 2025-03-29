@@ -1,0 +1,71 @@
+﻿<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+    <title>Đăng nhập | Quản lý thực tập - Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Admin & Dashboard" name="description" />
+    <meta content="Pichforest" name="author" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico">
+
+    <!-- Bootstrap Css -->
+    <link href="/assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="/assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+
+</head>
+
+
+<body>
+
+    <!-- <body data-layout="horizontal"> -->
+
+    <div class="authentication-bg min-vh-100">
+        <div class="bg-overlay bg-white"></div>
+        <div class="container">
+            <div class="d-flex flex-column min-vh-100 px-3 pt-4">
+                <div class="row justify-content-center my-auto">
+                    <div class="col-md-8 col-lg-6 col-xl-4">
+
+                        <div class="text-center  py-5">
+                            <div class="mb-4">
+                                <h5>Chào mừng quay trở lại !</h5>
+                                <p>Đăng nhập để tiếp tục sử dụng phần mềm.</p>
+                            </div>
+                            @RenderBody()
+
+                            <div class="mt-5 text-center text-muted">
+                                @*<p>Don't have an account ? <a href="auth-signup-basic.html" class="fw-medium text-decoration-underline"> Signup </a></p>*@
+                            </div>
+                        </div>
+                    </div><!-- end col -->
+                </div><!-- end row -->
+
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="text-center text-muted p-4">
+                            <p class="mb-0">
+                                &copy;
+                                <script>document.write(new Date().getFullYear())</script> ..., JSC.
+                            </p>
+                        </div>
+                    </div><!-- end col -->
+                </div><!-- end row -->
+
+            </div>
+        </div><!-- end container -->
+    </div>
+    <!-- end authentication section -->
+    <!-- JAVASCRIPT -->
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/metismenujs@1.4.0/dist/metismenujs.min.js"></script>
+    <script src="/assets/libs/simplebar/simplebar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"></script>
+
+</body>
+</html>

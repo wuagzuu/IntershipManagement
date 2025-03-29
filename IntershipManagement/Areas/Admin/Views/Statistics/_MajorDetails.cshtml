@@ -1,0 +1,54 @@
+﻿@model IEnumerable<IntershipManagement.Areas.Admin.Data.MajorDetailViewModel>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel">Chi tiết thực tập theo chuyên ngành</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close">
+    </button>
+</div>
+<div class="modal-body">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Mã SV</th>
+                    <th>Tên sinh viên</th>
+                    <th>Doanh nghiệp</th>
+                    <th>GVHD</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.StudentCode</td>
+                        <td>@item.StudentName</td>
+                        <td>@item.EnterpriseName</td>
+                        <td>@item.TeacherName</td>
+                        <td>
+                            @{
+                                string status = "";
+                                switch (item.Status)
+                                {
+                                    case 0: status = "Chờ duyệt"; break;
+                                    case 1: status = "Đang thực tập"; break;
+                                    case 2: status = "Hoàn thành"; break;
+                                    default: status = "Không xác định"; break;
+                                }
+                            }
+                            @status
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light"
+                data-bs-dismiss="modal">
+            Thoát
+        </button>
+    </div>
+</div>
+

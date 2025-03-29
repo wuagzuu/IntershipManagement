@@ -1,0 +1,100 @@
+﻿@model IntershipManagement.Areas.Admin.Data.AssignStudentsViewModel
+@{
+    ViewBag.Title = "Phân Sinh Viên Vào Nhóm";
+    var index = 0;
+}
+<div class="card">
+    <div class="card-header"><h3 class="card-title">Phân Sinh Viên Vào Nhóm</h3></div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                @using (Html.BeginForm("AssignConfirm", "StudentClass", FormMethod.Post, new { area = "Admin", enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal">
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(m => m.CourseClassId)
+                        @Html.HiddenFor(m => m.CourseGroupId)
+                        <div class="form-group">
+                            <label for="students">Chọn Sinh Viên:</label>
+                            <select id="students" name="SelectedStudentIds" multiple="multiple" class="form-control">
+                                @foreach (var student in Model.Students)
+                                {
+                                    <option value="@student.Value">@student.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-danger" href="/admin/studentclass/uploadfile"><i class="ti ti-upload"></i> Upload file</a>
+                        <button type="submit" class="btn btn-primary ">Xác nhận</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Table database</h3><div id="error-message" style="display: none;"></div>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped" id="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nhóm</th>
+                    <th>Lớp</th>
+                    <th>Tên sinh viên</th>
+                    <th>Ngày tạo</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody id="myTable1">
+                @foreach (var item in Model.ListStudents)
+                {
+                    index++;
+                    <tr>
+                        <td style="display:none">@item.Id</td>
+                        <td>@index</td>
+                        <td>
+                            @item.GroupName
+                        </td>
+                        <td>
+                            @item.ClassName
+                        </td>
+                        <td>
+                            @item.StudentName
+                        </td>
+                        <td>
+                            @item.EnrollmentDate.Value.ToShortDateString()
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                @if (User.IsInRole("Admin - Quản trị toàn hệ thống"))
+                                    {
+                                        <a class="fas fa-trash-alt" href="/admin/studentclass/delete/@item.Id?courseClassId=@item.ClassId" onclick="return confirm('Xóa sinh viên này khỏi nhóm?')" title="xóa sinh viên"></a>
+                                    }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="row">
+
+        </div>
+    </div>
+</div>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#students').select2({
+            placeholder: "Chọn",
+            allowClear: true
+        });
+    });
+</script>

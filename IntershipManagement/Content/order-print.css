@@ -1,0 +1,40 @@
+﻿#printDiv{
+    font-family: 'Times New Roman' !important;
+}
+h1 {
+    font-size: 21px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+    margin-top: 1rem;
+}
+p{
+    margin: 0;
+}
+.row {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+}
+table {
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-collapse: collapse;
+    display: table;
+}
+table tr th{
+    text-align: center;
+}
+
+.table-bordered td, .table-bordered th {
+    border: 1px solid #5e6773;
+    height: 30px;
+    padding: 3px;
+}
+.text-center{
+    text-align: center;
+}
+.text-right {
+    text-align: right;
+}

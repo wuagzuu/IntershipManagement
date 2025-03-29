@@ -1,0 +1,54 @@
+﻿@model IntershipManagement.Models.Report
+
+<div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel">Đánh giá báo cáo</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <p><strong>Ghi chú của sinh viên:</strong> @Html.Raw(Model.Description)</p>
+    <p><strong>Ngày nộp:</strong> @Html.DisplayFor(model => model.SubmissionDate)</p>
+    @if (!string.IsNullOrEmpty(Model.FilePath))
+    {
+        <p><strong>File đính kèm:</strong> <a href="@Url.Content(Model.FilePath)" target="_blank">Tải xuống</a></p>
+    }
+    else
+    {
+        <p><strong>File đính kèm:</strong> Không có</p>
+    }
+    @using (Html.BeginForm("Evaluate", "TeacherReports", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.SubmissionRound)
+
+        <div class="form-horizontal">
+            <div class="mb-3 row">
+                <label for="TeacherComments" class="col-md-4 col-form-label">Nhận xét</label>
+                <div class="col-md-8">
+                    @Html.TextAreaFor(model => model.TeacherComments, new { @class = "form-control", @rows = 5 })
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="TeacherRating" class="col-md-4 col-form-label">Đánh giá (thang điểm 10)</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Grade, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = "1", @max = "10" } })
+                </div>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="IsCompleted" class="col-md-4 col-form-label">Kết quả</label>
+            <div class="col-md-8">
+                @Html.DropDownListFor(model => model.IsCompleted, new SelectList(new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "ĐẠT", Value = "1" },
+                    new SelectListItem { Text = "KHÔNG ĐẠT", Value = "0" }
+                }, "Value", "Text"), new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Thoát</button>
+            <button type="submit" class="btn btn-primary">Xác nhận</button>
+        </div>
+    }
+</div>

@@ -1,0 +1,54 @@
+﻿@using IntershipManagement.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Remove User";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Xóa tài khoản cá nhân</h3>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("RemoveUser", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <hr />
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            <div class="col-md-4">
+                <div class="form-group row">
+                    @Html.Label("Tài khoản", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">@Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly",@Value=User.Identity.Name } })</div>
+                </div>
+                @*<div class="form-group row">
+                    @Html.Label("Số điện thoại", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">@Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })</div>
+                </div>
+                <div class="form-group row">
+                    @Html.Label("Email", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">@Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })</div>
+                </div>*@
+                <div class="form-group row">
+                    @Html.Label("Mật khẩu", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">@Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })</div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-8"><input id="btnRemove" type="submit" value="Xóa tài khoản" class="btn btn-danger" /></div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $("#btnRemove").on('click', function () {
+            if (confirm('Bạn sẽ không thể đăng nhập bằng tài khoản này được nữa?')) {
+                // do stuff
+
+            } else {
+                return false;
+            }
+        })
+    </script>
+}

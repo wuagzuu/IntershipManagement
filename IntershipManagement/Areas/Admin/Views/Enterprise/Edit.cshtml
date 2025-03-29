@@ -1,0 +1,55 @@
+﻿@model IntershipManagement.Models.Enterprise
+@{
+
+}
+<div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel">Thông tin doanh nghiệp</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close">
+    </button>
+</div>
+<div class="modal-body">
+    @using (Html.BeginForm("EditConfirm", "Enterprise", FormMethod.Post, new { area = "Admin", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.Createdate)
+            @Html.HiddenFor(model => model.Createby)
+            @Html.HiddenFor(model => model.Code)
+            <div class="mb-3 row">
+                <label for="Code" class="col-md-4 col-form-label">Mã doanh nghiệp</label>
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Name" class="col-md-4 col-form-label">Tên doanh nghiệp</label>
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Province" class="col-md-4 col-form-label">Khu vực</label>
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Province, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Hotline" class="col-md-4 col-form-label">Hotline</label>
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Hotline, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light"
+                    data-bs-dismiss="modal">
+                Thoát
+            </button>
+            <button type="submit" class="btn btn-primary ">Lưu</button>
+        </div>
+    }
+</div>

@@ -1,0 +1,200 @@
+﻿@model IntershipManagement.Models.RegisterViewModel
+@{
+
+}
+<div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel">Thông tin tài khoản</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close">
+    </button>
+</div>
+<div class="modal-body">
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { area = "Admin", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="mb-3 row">
+                <label for="UserName" class="col-md-4 col-form-label">Tài khoản</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @pattern = @"^[A-Za-z0-9!@#$%^&*_\-]*$", @placeholder = "Tài khoản", @required = "required" } })
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Password" class="col-md-4 col-form-label">Mật khẩu</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Password, new
+                    {
+                        htmlAttributes = new
+                        {
+                            @class = "form-control",
+                            @pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*_\-])[A-Za-z0-9!@#$%^&*_\-]{8,}$",
+                            @placeholder = "Mật khẩu",
+                            @required = "required",
+                            @title = "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và ký tự đặc biệt"
+                        }}) 
+
+                </div>
+
+            </div>
+            <div class="mb-3 row">
+                <label for="ConfirmPassword" class="col-md-4 col-form-label">Xác nhận mật khẩu</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.ConfirmPassword, new
+                    {
+                        htmlAttributes = new
+                        {
+                            @class = "form-control",
+                            @pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*_\-])[A-Za-z0-9!@#$%^&*_\-]{8,}$",
+                            @placeholder = "Mật khẩu",
+                            @required = "required",
+                            @title = "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và ký tự đặc biệt"
+                        }})
+
+                </div>
+
+            </div>
+            <div class="mb-3 row">
+                <label for="Role" class="col-md-4 col-form-label">Quyền</label>
+                <div class="col-md-8">
+                    @Html.DropDownList("Role", new SelectList(ViewBag.role, "Id", "Name"), "--Chọn--", new { @id = "role-dropdown", @class = "form-control", @required = "required" })
+                </div>
+
+            </div>
+            <div class="mb-3 row" id="box-major-select" style="display:none">
+                <div class="col-md-12">
+                    <select class="form-control btn btn-secondary dropdown-toggle" type="text" name="Major" id="Major">
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Code" class="col-md-4 col-form-label">Mã định danh</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @placeholder = "Mã định danh", @required = "required" } })
+                </div>
+
+            </div>
+            <div class="mb-3 row">
+                <label for="PhoneNumber" class="col-md-4 col-form-label">Số điện thoại</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Số điện thoại", @required = "required" } })
+                </div>
+
+            </div>
+            <div class="mb-3 row">
+                <label for="FullName" class="col-md-4 col-form-label">Họ tên</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Tên đầy đủ", @required = "required" } })
+                </div>
+
+            </div>
+            <div class="mb-3 row">
+                <label for="Email" class="col-md-4 col-form-label">Email</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email", @required = "required" } })
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light"
+                    data-bs-dismiss="modal">
+                Thoát
+            </button>
+            <button type="submit" class="btn btn-primary ">Lưu</button>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $('#role-dropdown').change(function () {
+            debugger;
+            var selectedOption = $(this).children("option:selected").text();
+            if (selectedOption == "Giáo viên") {
+                $("#Major").empty();
+                $("#Major").append($('<option value="" disabled selected></option>').val('').html('--Chọn chuyên ngành HD--'));
+                $.ajax
+                    ({
+                        url: '/User/GetMajor',
+                        type: 'GET',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        success: function (data) {
+                            debugger;
+                            $("#box-major-select").css("display", "block");
+                            $.each(data, function (i, result) {
+
+                                $("#Major").append($('<option></option>').val(result.Id).html(result.Name));
+                            })
+                        }
+                    });
+            }
+            else {
+                $("#Major").val('');
+                $("#box-major-select").css("display", "none");
+            }
+        });
+        $("#Province").click(function () {
+            $.ajax
+                ({
+                    url: '/User/GetProvince',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        $("#District").empty();
+                        $("#Ward").empty();
+                        if ($("#Province option").length < 3) {
+                            $.each(data, function (i, province) {
+                                debugger;
+                                $("#Province").append($('<option></option>').val(province.Id).html(province.Name))
+                            })
+                        }
+                    }
+                });
+        });
+        $("#District").click(function () {
+            var name = $("#Province").val();
+            $.ajax
+                ({
+                    url: '/User/GetDistrict',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        text: name
+                    }),
+                    success: function (data) {
+                        $("#Ward").empty();
+                        if ($("#District option").length < 3) {
+                            $.each(data, function (i, district) {
+                                $("#District").append($('<option></option>').val(district.Id).html(district.Name))
+                            })
+                        }
+                    }
+                });
+        });
+        $("#Ward").click(function () {
+            var name = $("#District").val();
+            $.ajax
+                ({
+                    url: '/User/GetWard',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        text: name
+                    }),
+                    success: function (data) {
+                        if ($("#Ward option").length < 3) {
+                            $.each(data, function (i, district) {
+                                $("#Ward").append($('<option></option>').val(district.Id).html(district.Name))
+                            })
+                        }
+                    }
+                });
+        });
+    })
+</script>
+

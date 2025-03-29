@@ -1,0 +1,133 @@
+﻿@model IntershipManagement.Areas.Admin.Data.InternshipViews
+@{
+
+}
+<div class="modal-header">
+    <h5 class="modal-title" id="myModalLabel">Phiếu đăng ký thực tập</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close">
+    </button>
+</div>
+<div class="modal-body">
+    @using (Html.BeginForm("EditConfirm", "Internship", FormMethod.Post, new { area = "Admin", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.Code)
+            @Html.HiddenFor(model => model.StudentId)
+            @Html.HiddenFor(model => model.StudentName)
+            @Html.HiddenFor(model => model.TeacherId)
+            @Html.HiddenFor(model => model.TeacherName)
+            @Html.HiddenFor(model => model.MajorId)
+            @Html.HiddenFor(model => model.MajorName)
+            @Html.HiddenFor(model => model.Createdate)
+            @Html.HiddenFor(model => model.Createby)
+            @Html.HiddenFor(model => model.Status)
+            @Html.HiddenFor(model => model.IsConfirm)
+            <div class="mb-3 row">
+                <label for="Code" class="col-md-4 col-form-label">Mã định danh</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.StudentCode, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Code" class="col-md-4 col-form-label">Tên sinh viên</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.StudentName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Code" class="col-md-4 col-form-label">Giáo viên hướng dẫn</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.TeacherName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Name" class="col-md-4 col-form-label">Chuyên ngành</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.MajorName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-md-4 col-form-label">Doanh nghiệp</label>
+                <div class="col-md-8">
+                    @Html.DropDownListFor(m => m.EnterpriseId,
+                        new SelectList(Model.ListEnterprise, "Id", "Name"),
+                        "-- Chọn doanh nghiệp --",
+                        new { @class = "form-control", @id = "enterpriseSelect" })
+                    @Html.ValidationMessageFor(m => m.EnterpriseId, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(m => m.EnterpriseName, new { @id = "enterpriseName" })
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-md-4 col-form-label">Vị trí ứng tuyển</label>
+                <div class="col-md-8">
+                    @Html.DropDownListFor(m => m.JobId,
+                        new SelectList(new List<SelectListItem>()),
+                        "-- Chọn vị trí --",
+                        new { @class = "form-control", @id = "jobSelect" })
+                    @Html.ValidationMessageFor(m => m.JobId, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(m => m.JobName, new { @id = "jobName" })
+                </div>
+            </div>
+
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light"
+                    data-bs-dismiss="modal">
+                Thoát
+            </button>
+            <button type="submit" class="btn btn-primary ">Xác nhận</button>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        // Cập nhật EnterpriseName khi chọn doanh nghiệp
+        $('#enterpriseSelect').change(function () {
+            var selectedEnterpriseId = $(this).val();
+            var selectedEnterpriseName = $(this).find("option:selected").text();
+            $('#enterpriseName').val(selectedEnterpriseName);
+
+            var jobSelect = $('#jobSelect');
+
+            // Reset job select
+            jobSelect.empty();
+            jobSelect.append($('<option></option>').val('').text('-- Chọn vị trí --'));
+            $('#jobName').val(''); // Reset job name
+
+            if (selectedEnterpriseId) {
+                jobSelect.prop('disabled', true);
+
+                $.ajax({
+                    url: '@Url.Action("GetJobsByEnterprise", "Internship", new { area = "Admin" })',
+                    type: 'GET',
+                    data: { enterpriseId: selectedEnterpriseId },
+                    success: function (data) {
+                        $.each(data, function (index, item) {
+                            jobSelect.append($('<option></option>')
+                                .val(item.Id)
+                                .text(item.Name));
+                        });
+                        jobSelect.prop('disabled', false);
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra khi tải danh sách vị trí.');
+                        jobSelect.prop('disabled', false);
+                    }
+                });
+            }
+        });
+
+        // Cập nhật JobName khi chọn vị trí
+        $('#jobSelect').change(function () {
+            var selectedJobName = $(this).find("option:selected").text();
+            $('#jobName').val(selectedJobName);
+        });
+    });
+</script>
+
